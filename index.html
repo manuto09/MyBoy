@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Corazón de Palabras Latente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #220011;
+            font-family: 'Dancing Script', cursive;
+            color: red;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: min(70vw, 350px);
+            height: min(70vw, 350px);
+            animation: latido 1s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8));
+        }
+
+        .word {
+            position: absolute;
+            font-size: min(4vw, 20px);
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.8);
+        }
+
+        /* Texto central */
+        .center-text {
+            position: absolute;
+            font-size: min(6vw, 32px);
+            font-weight: bold;
+            text-align: center;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 0 10px rgba(255, 105, 180, 1);
+        }
+
+        /* Animación de latido */
+        @keyframes latido {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.8));
+            }
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 25px rgba(255, 105, 180, 1));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="heartContainer">
+        <div class="center-text">Juan Pablo</div>
+    </div>
+
+    <script>
+        function createHeartWords() {
+            const container = document.getElementById("heartContainer");
+            const words = ["Te amo", "Amor", "Lindo", "Amorcito", "Corazón", "Niño"]; // "Siempre" reemplazado por "Amorcito"
+            
+            let scale = 3.5; 
+            let density = 30;
+            let placedPositions = []; 
+
+            for (let i = 0; i < density; i++) {
+                let t, x, y;
+                let tries = 0;
+                do {
+                    t = Math.PI * (Math.random() * 2 - 1);
+                    x = 50 + scale * (16 * Math.pow(Math.sin(t), 3)) + (Math.random() * 5 - 2.5); 
+                    y = 50 - scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) + (Math.random() * 5 - 2.5);
+                    tries++;
+                } while (placedPositions.some(pos => Math.hypot(pos.x - x, pos.y - y) < 6) && tries < 10); 
+                
+                placedPositions.push({ x, y });
+
+                let word = document.createElement("div");
+                word.className = "word";
+                word.innerText = words[Math.floor(Math.random() * words.length)];
+                word.style.left = `${x}%`;
+                word.style.top = `${y}%`;
+
+                container.appendChild(word);
+            }
+        }
+
+        createHeartWords();
+    </script>
+</body>
+</html>
